@@ -28,12 +28,12 @@ public class Cliente implements Serializable{
 	private String cpfOuCnpj;
 	private Integer tipo;
 	
-	@OneToMany(mappedBy = "cliente")
-	private List<Endereco> enderecos = new ArrayList<>();
-	
 	@ElementCollection
 	@CollectionTable(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>();
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<Endereco> enderecos = new ArrayList<>();
 	
 	public Cliente() {
 	}
