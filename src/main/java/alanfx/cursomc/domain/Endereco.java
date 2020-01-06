@@ -97,7 +97,6 @@ public class Endereco implements Serializable{
 		this.cep = cep;
 	}
 
-//	@JsonIgnore
 	public Cliente getCliente() {
 		return cliente;
 	}
