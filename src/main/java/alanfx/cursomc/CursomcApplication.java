@@ -15,6 +15,7 @@ import alanfx.cursomc.domain.Cidade;
 import alanfx.cursomc.domain.Cliente;
 import alanfx.cursomc.domain.Endereco;
 import alanfx.cursomc.domain.Estado;
+import alanfx.cursomc.domain.ItemPedido;
 import alanfx.cursomc.domain.Pagamento;
 import alanfx.cursomc.domain.PagamentoComBoleto;
 import alanfx.cursomc.domain.PagamentoComCartao;
@@ -27,6 +28,7 @@ import alanfx.cursomc.repositories.CidadeRepository;
 import alanfx.cursomc.repositories.ClienteRepository;
 import alanfx.cursomc.repositories.EnderecoRepository;
 import alanfx.cursomc.repositories.EstadoRepository;
+import alanfx.cursomc.repositories.ItemPedidoRepository;
 import alanfx.cursomc.repositories.PagamentoRepository;
 import alanfx.cursomc.repositories.PedidoRepository;
 import alanfx.cursomc.repositories.ProdutoRepository;
@@ -50,6 +52,8 @@ public class CursomcApplication implements CommandLineRunner {
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -82,7 +86,7 @@ public class CursomcApplication implements CommandLineRunner {
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 		
-		//============
+		//=============
 		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
 		Set<String> tels = new HashSet<String>();
 		tels.addAll(Arrays.asList("27363323","93838393"));
@@ -105,10 +109,11 @@ public class CursomcApplication implements CommandLineRunner {
 		
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+		
+		//===============
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
-	
-	
-	
-	
-	
 }
