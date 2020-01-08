@@ -22,6 +22,7 @@ import alanfx.cursomc.domain.PagamentoComCartao;
 import alanfx.cursomc.domain.Pedido;
 import alanfx.cursomc.domain.Produto;
 import alanfx.cursomc.domain.enums.EstadoPagamento;
+import alanfx.cursomc.domain.enums.Perfil;
 import alanfx.cursomc.domain.enums.TipoCliente;
 import alanfx.cursomc.repositories.CategoriaRepository;
 import alanfx.cursomc.repositories.CidadeRepository;
@@ -107,11 +108,19 @@ public class DBService {
 		Set<String> tels = new HashSet<String>();
 		tels.addAll(Arrays.asList("27363323","93838393"));
 		cli1.setTelefones(tels);
+		cli1.addPerfil(Perfil.ADMIN);
+		
+		Cliente cli2 = new Cliente(null, "Ana Paula", "jose.asilva@dcomp.ufs.br", "25339686094", TipoCliente.PESSOAFISICA, pe.encode("123"));
+		Set<String> tels2 = new HashSet<String>();
+		tels2.addAll(Arrays.asList("4654646636","9463215145"));
+		cli2.setTelefones(tels2);
+		
 		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "38220834", cli1, c1);
 		Endereco e2 = new Endereco(null, "Avenida Matos", "105", "Saia 800", "Centro", "38777012", cli1, c2);
+		Endereco e3 = new Endereco(null, "Avenida Floriano", "2106", null, "Centro", "99977012", cli2, c2);
 		
-		clienteRepository.save(cli1);
-		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		clienteRepository.saveAll(Arrays.asList(cli1, cli2));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3));
 		
 		//==============
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
