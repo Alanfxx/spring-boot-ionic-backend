@@ -1,13 +1,16 @@
 package alanfx.cursomc.services;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import alanfx.cursomc.domain.Cliente;
 import alanfx.cursomc.domain.ItemPedido;
 import alanfx.cursomc.domain.PagamentoComBoleto;
 import alanfx.cursomc.domain.Pedido;
@@ -15,6 +18,8 @@ import alanfx.cursomc.domain.enums.EstadoPagamento;
 import alanfx.cursomc.repositories.ItemPedidoRepository;
 import alanfx.cursomc.repositories.PagamentoRepository;
 import alanfx.cursomc.repositories.PedidoRepository;
+import alanfx.cursomc.security.UserSS;
+import alanfx.cursomc.services.exceptions.AuthorizationException;
 import alanfx.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -34,10 +39,6 @@ public class PedidoService {
 	private ClienteService clienteService;
 	@Autowired
 	private EmailService emailService;
-	
-	public List<Pedido> buscarTodas(){
-		return repo.findAll();
-	}
 	
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
@@ -67,5 +68,15 @@ public class PedidoService {
 		itemPedidoRepository.saveAll(obj.getItens());
 		emailService.sendOrderConfirmationHtmlEmail(obj);;
 		return obj;
+	}
+	
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Cliente cliente =  clienteService.find(user.getId());
+		return repo.findByCliente(cliente, pageRequest);
 	}
 }
