@@ -1,5 +1,6 @@
 package alanfx.cursomc.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import alanfx.cursomc.domain.Cidade;
 import alanfx.cursomc.domain.Cliente;
@@ -36,6 +38,8 @@ public class ClienteService {
 	
 	@Autowired
 	private BCryptPasswordEncoder pe;
+	@Autowired
+	private S3Service s3Service;
 	
 	public List<Cliente> findAll(){
 		return repo.findAll();
@@ -109,5 +113,9 @@ public class ClienteService {
 			cli.getTelefones().add(objDto.getTelefone3());	
 		}	
 		return cli;
-	}	
+	}
+	
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		return s3Service.uploadFile(multipartFile);
+	}
 }
